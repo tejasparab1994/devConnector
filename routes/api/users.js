@@ -25,35 +25,35 @@ router.post('/register',(req, res) => {
   // through a post request,which will ultimately be a form in
   // react application, we access it with request.body and then email
   User.findOne({ email: req.body.email })
-      .then(user => {
-        if(user) {
-          return res.status(400).json({email: 'Email already exists'});
-        }
-        else {
-          const avatar = gravatar.url(req.body.email,{
-            s: '200' ,//size
-            r: 'pg', //rating, pg or r and all that
-            d: 'mm' //Default
-          });
-          //create a new user in mongoose
-          const newUser = new User({
-            name: req.body.name,
-            email: req.body.email,
-            avatar,
-            password: req.body.password,
-          });
-          //callback will get back salt
-          bcrypt.genSalt(10, (err, salt) => {
-            bcrypt.hash(newUser.password, salt,(err, hash) => {
-              if(err) throw err;
-              newUser.password = hash;
-              newUser.save()
-              .then(user => res.json(user))
-              .catch(err => console.log(err));
-            })
-          })
-        }
+  .then(user => {
+    if(user) {
+      return res.status(400).json({email: 'Email already exists'});
+    }
+    else {
+      const avatar = gravatar.url(req.body.email,{
+        s: '200' ,//size
+        r: 'pg', //rating, pg or r and all that
+        d: 'mm' //Default
+      });
+      //create a new user in mongoose
+      const newUser = new User({
+        name: req.body.name,
+        email: req.body.email,
+        avatar,
+        password: req.body.password,
+      });
+      //callback will get back salt
+      bcrypt.genSalt(10, (err, salt) => {
+        bcrypt.hash(newUser.password, salt,(err, hash) => {
+          if(err) throw err;
+          newUser.password = hash;
+          newUser.save()
+          .then(user => res.json(user))
+          .catch(err => console.log(err));
+        })
       })
+    }
+  })
 });
 
 // @route  GET api/users/login
@@ -66,9 +66,21 @@ router.post('/login', (req, res) => {
 
   //Find the user by Email
   User.findOne({email})
-      .then(user => )
-
-
+  .then(user => {
+    //check for user
+    if(!user) {
+      return res.status(404).json({email: 'User not found'});
+    }
+    // check the password
+    bcrypt.compare(password, user.password)
+    .then(isMatch => {
+      if(isMatch) {
+        res.json({msg: 'Success'});
+      } else {
+        return res.status(400).json({password: 'Password wrong'});
+      }
+    })
+  });
 });
 
 
