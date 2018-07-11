@@ -13,10 +13,13 @@ const jwt = require('jsonwebtoken');
 const keys = require('../../config/keys');
 const passport = require('passport');
 
+// Load input validation
+const validateRegisterInput = require('../../validation/register');
 
 //Load user model
 // we'll work with mongoose using this
 const User = require('../../models/User');
+
 
 // res.json outputs a json, this will be picked up by our frontend
 // to work on later.another function we used was res.send in server.js
@@ -32,6 +35,13 @@ router.get('/test', (req, res) => res.json({msg: "Users works"}));
 // @desc   Register user
 // @access public
 router.post('/register',(req, res) => {
+  //request.body includes everything sent to this route, name, email, password.
+  const { errors, isValid } = validateRegisterInput(req.body);
+
+  // check validation
+  if(!isValid) {
+    return res.status(400).json(errors);
+  }
   // check first if email exists
   // pass an object to findOne, when we send data to a route
   // through a post request,which will ultimately be a form in
@@ -42,7 +52,8 @@ router.post('/register',(req, res) => {
     if(user) {
       // status400 since user already exists, witha json passed stating
       // value exists
-      return res.status(400).json({email: 'Email already exists'});
+      errors.email = 'Email already exists';
+      return res.status(400).json(errors);
     }
     else {
       // using the gravatar package with its methods...
