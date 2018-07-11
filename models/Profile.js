@@ -29,7 +29,8 @@ const ProfileSchema = new Schema({
   },
   //developer, jr. developer, student
   status: {
-    type: String
+    type: String,
+    required: true
   },
   // html, java, javacript, reactjs -> this would be an array
   // user will input it that way and we would convert it into a comma seperated

@@ -7,6 +7,9 @@ module.exports = function validateRegisterInput(data) {
   let errors = {};
 
 
+  // the validator's isEmpty only checks for empty string, but when the name
+  // field would be left empty, it would be an empty object.
+  // hence we send the data.whatever first to our custom isEmpty function
   data.email = !isEmpty(data.email) ? data.email : '';
   data.password = !isEmpty(data.password) ? data.password : '';
 
