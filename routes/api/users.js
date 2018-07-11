@@ -15,7 +15,7 @@ const passport = require('passport');
 
 // Load input validation
 const validateRegisterInput = require('../../validation/register');
-
+const validateLoginInput = require('../../validation/login');
 //Load user model
 // we'll work with mongoose using this
 const User = require('../../models/User');
@@ -94,8 +94,20 @@ router.post('/register',(req, res) => {
 // @access public
 
 router.post('/login', (req, res) => {
+
+  //request.body includes everything sent to this route, name, email, password.
+  const { errors, isValid } = validateLoginInput(req.body);
+
+  // check validation
+  if(!isValid) {
+
+    return res.status(400).json(errors);
+  }
+
   const email = req.body.email;
   const password = req.body.password;
+
+
 
 
   //Find the user by Email
@@ -107,7 +119,8 @@ router.post('/login', (req, res) => {
     //check for user
     if(!user) {
       // status 404, user not found....
-      return res.status(404).json({email: 'User not found'});
+      errors.email = 'User not found';
+      return res.status(404).json(errors.email);
     }
     // user found
     // check the password now, we compare the users entered password with
@@ -140,8 +153,10 @@ router.post('/login', (req, res) => {
             });
           });
         }
+
         else {
-          return res.status(400).json({ password: 'Password incorrect'  });
+          errors.password = 'Password incorrect';
+          return res.status(400).json(errors);
         }
       })
     });
