@@ -1,4 +1,6 @@
 const express  = require('express');
+
+//create a router
 const router = express.Router();
 
 // res.json outputs a json, this will be picked up by our frontend
