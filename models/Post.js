@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose  = require('mongoose');
 const Schema = mongoose.Schema;
 
 
@@ -6,7 +6,7 @@ const Schema = mongoose.Schema;
 const PostSchema = new Schema({
   user: {
     //associate the user by its id
-    type: Schema.types.ObjectId,
+    type: Schema.Types.ObjectId,
     //reference the collection it refers to -> hence users
     ref: 'users'
   },
@@ -27,7 +27,7 @@ const PostSchema = new Schema({
   likes: [
     {
       user: {
-        type: Schema.types.ObjectId,
+        type: Schema.Types.ObjectId,
         //reference the collection it refers to -> hence users
         ref: 'users'
       }
@@ -35,8 +35,8 @@ const PostSchema = new Schema({
   ],
   comments: [
     {
-      ser: {
-        type: Schema.types.ObjectId,
+      user: {
+        type: Schema.Types.ObjectId,
         //reference the collection it refers to -> hence users
         ref: 'users'
       },
