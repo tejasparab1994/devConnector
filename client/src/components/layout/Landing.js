@@ -1,11 +1,15 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import code from './code.mov';
 
 class Landing extends Component {
   render() {
     return (
       <div className="landing">
         <div className="dark-overlay landing-inner text-light">
+          {/* <video muted autoPlay = "true" loop ="true">
+            <source src = {code} />
+          </video> */}
           <div className="container">
             <div className="row">
               <div className="col-md-12 text-center">
