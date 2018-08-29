@@ -1,11 +1,10 @@
 import React, {Component} from 'react';
 import {Card, CardBody} from 'reactstrap';
-
 import classnames from 'classnames';
 import {connect} from 'react-redux';
 import {registerUser} from '../../actions/authActions';
 import PropTypes from 'prop-types';
-import { withRouter } from 'react-route-dom';
+import { withRouter } from 'react-router-dom';
 
 class Register extends Component {
   constructor() {
@@ -24,6 +23,9 @@ class Register extends Component {
 // if we get errors from the state in reducer then we will just add the props
 // to the component state and continue using the same code as before
 // without needing to change from pre-redux
+// but why would we need to change pre-redux code?
+// because this way we will add the error props to component state as soon as we get
+// them
   componentWillReceiveProps(nextProps) {
     if(nextProps.errors){
 
@@ -33,6 +35,8 @@ class Register extends Component {
 
   onChange(e) {
     this.setState({
+      // get the name of the field, by e.target, where name can be name, email,
+      // password or password2 and get its corresponding values and set state
       [e.target.name]: e.target.value
     });
   }
@@ -47,8 +51,8 @@ class Register extends Component {
       password2: this.state.password2
     };
     // will allow us to redirect in the action using this.props.history.
+    // any action we want will be available in props and we waccess it through props
     this.props.registerUser(newUser, this.props.history);
-
   }
 
   render() {
@@ -69,9 +73,12 @@ class Register extends Component {
                 <h5 className="display-4 text-center">Sign Up</h5>
                 <p className="lead text-center">Create your DevConnector account</p>
 
+                {/* html5 error messages removed with noValidate */}
                 <form noValidate="noValidate" onSubmit={this.onSubmit}>
+
                   <div className="form-group">
-                    {/* is-invalid class will only exist if there is errors.name and same for others  */}
+                    {/* is-invalid class will only exist if there is errors.name and same for others
+                    which we got from bootstrap classes */}
                     <input type="text" className={classnames("form-control form-control-lg",
                       {'is-invalid': errors.name})}
                       placeholder="Name"
@@ -80,6 +87,7 @@ class Register extends Component {
                       onChange={this.onChange} />
                     {errors.name && (<div className="invalid-feedback">{errors.name}</div>)}
                   </div>
+
                   <div className="form-group">
                     <input type="email" className={classnames("form-control form-control-lg",
                       {'is-invalid': errors.email})}
@@ -111,6 +119,7 @@ class Register extends Component {
                     {errors.password2 && (<div className="invalid-feedback">{errors.password2}</div>)}
                   </div>
 
+
                   <input type="submit" className="btn btn-info btn-block mt-4"/>
                 </form>
               </div>
@@ -139,7 +148,8 @@ const mapStateToProps = (state) => ({
   errors: state.errors
 });
 
-// first argument of connec tis mapStateToProps while the second argument is
+// first argument of connect is mapStateToProps while the second argument is
 // mapDispatchToProps
-// we added withRouter to redirect in the authAction.js
+// second parameter is an object to wwhich we want to map our actions
+// we added withRouter to redirect in the authAction.js from register to login page
 export default connect(mapStateToProps, {registerUser})(withRouter(Register));

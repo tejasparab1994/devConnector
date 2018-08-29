@@ -7,10 +7,21 @@ import Login from './components/auth/Login';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import './App.css';
 import {Provider} from 'react-redux';
-
+import jwt_decode from 'jwt-decode';
 import store from './store';
+import setAuthToken from './utils/setAuthToken';
+import {setCurrentUser} from './actions/authActions';
 
 
+// check for token when page refreshes because without this we lose all the state
+if(localStorage.jwtToken) {
+  // Set auth token header auth
+  setAuthToken(localStorage.jwtToken);
+  // dECODE Token and get user info and exp
+  const decoded  = jwt_decode(localStorage.jwtToken);
+  // set user and isAuthenticated
+  store.dispatch(setCurrentUser(decoded));
+}
 
 class App extends Component {
   render() {
@@ -28,7 +39,7 @@ class App extends Component {
           </div>
         </Router>
       </Provider>
-        );
+    );
   }
 }
 
