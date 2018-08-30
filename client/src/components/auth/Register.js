@@ -20,6 +20,13 @@ class Register extends Component {
     this.onSubmit = this.onSubmit.bind(this);
   }
 
+  // if user is logged in and goes to register page, then redirect to dashboard
+  componentDidMount() {
+    if(this.props.auth.isAuthenticated) {
+      this.props.history.push('/dashboard');
+    }
+  }
+
 // if we get errors from the state in reducer then we will just add the props
 // to the component state and continue using the same code as before
 // without needing to change from pre-redux
