@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import {Card, CardBody} from 'reactstrap';
-import classnames from 'classnames';
 import {connect} from 'react-redux';
 import {registerUser} from '../../actions/authActions';
 import PropTypes from 'prop-types';
@@ -120,7 +119,7 @@ class Register extends Component {
                     onChange = {this.onChange}
                     error = {errors.password2}
                   />
-                  
+
 
                   <input type="submit" className="btn btn-info btn-block mt-4"/>
                 </form>
