@@ -1,11 +1,12 @@
 import Axios from 'axios';
 
 
-import { ADD_POST, GET_ERRORS, GET_POSTS, POST_LOADING, DELETE_POST, GET_POST} from './types';
+import { ADD_POST, CLEAR_ERRORS, GET_ERRORS, GET_POSTS, POST_LOADING, DELETE_POST, GET_POST} from './types';
 
 
 //ADD POST
 export const addPost = postData => dispatch => {
+  dispatch(clearErrors());
   Axios
   .post('/api/posts', postData)
   .then(res =>
@@ -109,9 +110,56 @@ export const removeLike = id => dispatch => {
   );
 };
 
+
+//ADD comment
+export const addComment = (id, commentData) => dispatch => {
+  dispatch(clearErrors());
+  Axios
+  .post(`/api/posts/comment/${id}`, commentData)
+  .then(res =>
+    dispatch({
+      type: GET_POST,
+      payload: res.data
+    })
+  )
+  .catch(err =>
+    dispatch({
+      type: GET_ERRORS,
+      payload: err.response.data
+    })
+  );
+};
+
+
+//delete comment
+export const deleteComment = (id, commentId) => dispatch => {
+  Axios
+  .delete(`/api/posts/comment/${id}/${commentId}`)
+  .then(res =>
+    dispatch({
+      type: GET_POST,
+      payload: res.data
+    })
+  )
+  .catch(err =>
+    dispatch({
+      type: GET_ERRORS,
+      payload: err.response.data
+    })
+  );
+};
+
 // set loading state
 export const setPostLoading = () => {
   return {
     type: POST_LOADING
+  }
+}
+
+
+// clear errors
+export const clearErrors = () => {
+  return {
+    type: CLEAR_ERRORS
   }
 }

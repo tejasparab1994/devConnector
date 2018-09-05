@@ -7,6 +7,8 @@ const bodyParser = require('body-parser');
 //bringing in passport after generating the token using jwt
 const passport = require('passport');
 
+const path = require('path');
+
 
 //bringing in the files from routes/api which are all the different pages we
 // would be having in our app
@@ -41,6 +43,17 @@ require('./config/passport.js')(passport);
 app.use('/api/users', users);
 app.use('/api/profile', profile);
 app.use('/api/posts', posts);
+
+
+// SErve static assets if in production
+if(process.env.NODE_ENV === 'production') {
+  // Set static folder
+  app.use(express.static('client/build'));
+
+  app.get('*', (req, res) => {
+    res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
+  });
+}
 
 // when deploy on heroku then process.env.PORT else locally 5000
 const port = process.env.PORT || 5000;
